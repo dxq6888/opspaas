@@ -2,3 +2,8 @@ server:
   name: gin-client-go
   host: "0.0.0.0"
   port: 10000
+
+logger:
+  path: ""
+  name: opspaas
+  debug: true

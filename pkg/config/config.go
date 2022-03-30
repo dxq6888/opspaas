@@ -7,16 +7,23 @@ import (
 	"strconv"
 )
 
-var keyMap  map[KeyName]string
+var keyMap map[KeyName]string
 
 type Config struct {
 	Server Server
+	Logger Logger
 }
 
 type Server struct {
 	Name string `yaml:"name"`
 	Host string `yaml:"host"`
 	Port string `yaml:"port"`
+}
+
+type Logger struct {
+	LogPath  string `yaml:"path"`
+	LogName  string `yaml:"name"`
+	LogDebug string `yaml:"debug"`
 }
 
 func init() {
@@ -35,6 +42,9 @@ func init() {
 	keyMap[ServerName] = config.Server.Name
 	keyMap[ServerHost] = config.Server.Host
 	keyMap[ServerPort] = config.Server.Port
+	keyMap[LogPath] = config.Logger.LogPath
+	keyMap[LogName] = config.Logger.LogName
+	keyMap[LogDebug] = config.Logger.LogDebug
 }
 
 func GetString(KeyName KeyName) string {
@@ -44,13 +54,15 @@ func GetString(KeyName KeyName) string {
 func GetInt(keyName KeyName) int {
 	intStr := keyMap[keyName]
 	if intStr == "" {
-		klog.Fatal("GetInt not read config ===>"+keyName)
+		klog.Fatal("GetInt not read config ===>" + keyName)
 		return -1
 	}
 	v, err := strconv.Atoi(intStr)
-	if intStr == ""{
+	if intStr == "" {
 		klog.Fatal(err)
 		return -1
 	}
 	return v
 }
+
+
