@@ -9,12 +9,9 @@ import (
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"log"
 	"opspaas/pkg/client"
+	"opspaas/pkg/config"
 	"opspaas/pkg/tools"
 )
-
-type Namespaces struct {
-	Name string `json:"name"`
-}
 
 func GetNamespace() ([]v12.Namespace,error) {
 	clientSet, err := client.GetK8sClientset()
@@ -32,7 +29,7 @@ func GetNamespace() ([]v12.Namespace,error) {
 
 func CreateNamespace(c *gin.Context) (name string,err error) {
 	logger := tools.InitLogger()
-	var ns Namespaces
+	var ns config.Namespaces
 	err = c.ShouldBindJSON(&ns)
 	if err != nil {
 		logger.Info("params wrong")
@@ -63,7 +60,8 @@ func CreateNamespace(c *gin.Context) (name string,err error) {
 }
 
 func DeleteNamespace(c *gin.Context) error {
-	var ns Namespaces
+	logger := tools.InitLogger()
+	var ns config.Namespaces
 	err := c.ShouldBindJSON(&ns)
 	if err != nil {
 		log.Println("params is wrong!")
@@ -76,7 +74,7 @@ func DeleteNamespace(c *gin.Context) error {
 	}
 	err = clientSet.CoreV1().Namespaces().Delete(context.TODO(), ns.Name, v1.DeleteOptions{})
 	if err != nil {
-		log.Fatalln("delete namespace failed")
+		logger.Info("delete namespace failed",zap.String("err: ",err.Error()))
 		return err
 	}
 	return nil

@@ -10,3 +10,7 @@ const (
 	LogName    KeyName = "log_name"
 	LogDebug   KeyName = "log_debug"
 )
+
+type Namespaces struct {
+	Name string `json:"name"`
+}
