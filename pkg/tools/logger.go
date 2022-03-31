@@ -11,6 +11,7 @@ import (
 	"strconv"
 )
 
+
 func getCurrentDirectory() string {
 	dir, err := filepath.Abs(filepath.Dir(os.Args[0]))
 	if err != nil {
@@ -21,13 +22,13 @@ func getCurrentDirectory() string {
 }
 
 func GetLogConfig() (logPath ,logName string ,logDebug bool) {
-	logPath = config.GetString("LogPath")
+	logPath = config.GetString(config.LogPath)		//log_path
 	if logPath == ""{
 		dir := getCurrentDirectory()
 		logPath = dir
 	}
-	logName = config.GetString("LogName")
-	Debug := config.GetString("LogDebug")
+	logName = config.GetString(config.LogName)		//log_name
+	Debug := config.GetString(config.LogDebug)		//log_debug
 	logDebug, _ = strconv.ParseBool(Debug)
 	return logPath,logName,logDebug
 }

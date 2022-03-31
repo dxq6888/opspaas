@@ -13,7 +13,7 @@ func main() {
 	router.InitRouter(engine)
 	err := engine.Run(fmt.Sprintf("%s:%d", config.GetString(config.ServerHost), config.GetInt(config.ServerPort)))
 	if err != nil {
-		log.Fatalln("start fialed")
+		log.Fatalln("start failed")
 		return
 	}
 }

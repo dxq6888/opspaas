@@ -4,6 +4,6 @@ server:
   port: 10000
 
 logger:
-  path: ""
-  name: opspaas
+  path: /Users/dongxiaoqiang/go-project/opspaas/opspaas.log
+  name: opspaas.log
   debug: true

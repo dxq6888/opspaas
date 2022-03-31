@@ -1,8 +1,9 @@
 package config
 
 import (
+	"fmt"
+	yaml2 "gopkg.in/yaml.v2"
 	"io/ioutil"
-	"k8s.io/apimachinery/pkg/util/yaml"
 	"k8s.io/klog/v2"
 	"strconv"
 )
@@ -33,7 +34,8 @@ func init() {
 		klog.Fatal(err)
 		return
 	}
-	err = yaml.Unmarshal(yamlFile, &config)
+	//err = yaml.Unmarshal(yamlFile, &config)
+	err = yaml2.Unmarshal(yamlFile, &config)
 	if err != nil {
 		klog.Fatal(err)
 		return
@@ -45,16 +47,21 @@ func init() {
 	keyMap[LogPath] = config.Logger.LogPath
 	keyMap[LogName] = config.Logger.LogName
 	keyMap[LogDebug] = config.Logger.LogDebug
+	//fmt.Println("config init-------->",keyMap)
 }
 
 func GetString(KeyName KeyName) string {
+	//fmt.Println("config GetString-------->",keyMap[KeyName])
 	return keyMap[KeyName]
 }
+
 
 func GetInt(keyName KeyName) int {
 	intStr := keyMap[keyName]
 	if intStr == "" {
-		klog.Fatal("GetInt not read config ===>" + keyName)
+		//logger := tools.InitLogger()
+		//logger.Info("GetInt not read config ===>",zapcore.Field{Interface: keyName})
+		fmt.Println("GetInt not read config ===>",keyName)
 		return -1
 	}
 	v, err := strconv.Atoi(intStr)

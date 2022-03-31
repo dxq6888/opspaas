@@ -4,10 +4,12 @@ import (
 	"context"
 	"fmt"
 	"github.com/gin-gonic/gin"
+	"go.uber.org/zap"
 	v12 "k8s.io/api/core/v1"
 	v1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 	"log"
 	"opspaas/pkg/client"
+	"opspaas/pkg/tools"
 )
 
 type Namespaces struct {
@@ -15,30 +17,30 @@ type Namespaces struct {
 }
 
 func GetNamespace() ([]v12.Namespace,error) {
-	clientset, err := client.GetK8sClientset()
+	clientSet, err := client.GetK8sClientset()
 	if err != nil {
-		log.Fatalln("can not get clientset")
+		log.Fatalln("can not get clientSet")
 		return nil,err
 	}
-	namespaceList, err := clientset.CoreV1().Namespaces().List(context.TODO(), v1.ListOptions{})
+	namespaceList, err := clientSet.CoreV1().Namespaces().List(context.TODO(), v1.ListOptions{})
 	if err != nil {
-		log.Fatalln("can not get namespacelist")
+		log.Fatalln("can not get namespaceList")
 		return nil, err
 	}
 	return namespaceList.Items,nil
 }
 
 func CreateNamespace(c *gin.Context) (name string,err error) {
+	logger := tools.InitLogger()
 	var ns Namespaces
 	err = c.ShouldBindJSON(&ns)
-	fmt.Println("----->",ns)
 	if err != nil {
-		log.Println("params is wrong!")
+		logger.Info("params wrong")
 		return "", err
 	}
-	clientset, err := client.GetK8sClientset()
+	clientSet, err := client.GetK8sClientset()
 	if err != nil {
-		log.Fatalln("can not get clientset")
+		logger.Info("can not get clientSet")
 		return "", err
 	}
 	namespaces := &v12.Namespace{
@@ -49,9 +51,11 @@ func CreateNamespace(c *gin.Context) (name string,err error) {
 			Phase: v12.NamespaceActive,
 		},
 	}
-	result, err := clientset.CoreV1().Namespaces().Create(context.TODO(), namespaces, v1.CreateOptions{})
+	result, err := clientSet.CoreV1().Namespaces().Create(context.TODO(), namespaces, v1.CreateOptions{})
 	if err != nil {
-		log.Fatalln("create namespace error")
+		logger.Info("create namespace error: ",zap.String("err: ",err.Error()))
+		//logger.Info("create namespace error: ")
+		fmt.Println(err)
 		return "", err
 	}
 	name = result.Name
@@ -65,12 +69,12 @@ func DeleteNamespace(c *gin.Context) error {
 		log.Println("params is wrong!")
 		return err
 	}
-	clientset, err := client.GetK8sClientset()
+	clientSet, err := client.GetK8sClientset()
 	if err != nil {
-		log.Fatalln("can not get clientset")
+		log.Fatalln("can not get clientSet")
 		return err
 	}
-	err = clientset.CoreV1().Namespaces().Delete(context.TODO(), ns.Name, v1.DeleteOptions{})
+	err = clientSet.CoreV1().Namespaces().Delete(context.TODO(), ns.Name, v1.DeleteOptions{})
 	if err != nil {
 		log.Fatalln("delete namespace failed")
 		return err
