@@ -28,3 +28,26 @@ func GetDeployment(c *gin.Context) (deploymentList []v12.Deployment,err error) {
 	items := list.Items
 	return items,nil
 }
+
+func GetAllDeployment(c *gin.Context) (allDeploy []string, err error) {
+	logger := tools.InitLogger()
+	var ns config.Namespaces
+	nameSpaces, err := GetNamespace()
+	c.ShouldBindJSON(&ns)
+	clientSet, err := client.GetK8sClientset()
+	if err != nil {
+		logger.Info("get all deployment failed: ",zap.String("err:",err.Error()))
+		return nil, err
+	}
+	for _, nsList := range nameSpaces {
+		dpList, err := clientSet.AppsV1().Deployments(nsList.Name).List(context.TODO(), v1.ListOptions{})
+		if err != nil {
+			logger.Info("get dpList failed",zap.String("err: ",err.Error()))
+			return nil, err
+		}
+		for _, dp := range dpList.Items {
+			allDeploy = append(allDeploy,dp.Name)
+		}
+	}
+	return allDeploy,nil
+}

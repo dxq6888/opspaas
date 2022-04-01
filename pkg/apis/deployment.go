@@ -18,3 +18,14 @@ func GetDeployment(c *gin.Context) {
 	}
 	c.JSON(http.StatusOK,gin.H{"message":deploymentList})
 }
+
+func GetAllDeployment(c *gin.Context)  {
+	logger := tools.InitLogger()
+	allDeployment, err := service.GetAllDeployment(c)
+	if err != nil {
+		logger.Info("get AllDeployment failed,",zap.String("err: ",err.Error()))
+		c.JSON(http.StatusInternalServerError,gin.H{"message":err.Error()})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"message":allDeployment})
+}

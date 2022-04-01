@@ -27,6 +27,7 @@ func GetNamespace() ([]v12.Namespace,error) {
 	return namespaceList.Items,nil
 }
 
+
 func CreateNamespace(c *gin.Context) (name string,err error) {
 	logger := tools.InitLogger()
 	var ns config.Namespaces

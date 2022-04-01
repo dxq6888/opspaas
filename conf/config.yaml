@@ -7,3 +7,5 @@ logger:
   path: /Users/dongxiaoqiang/go-project/opspaas/opspaas.log
   name: opspaas.log
   debug: true
+
+

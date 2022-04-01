@@ -10,4 +10,5 @@ func InitRouter(r *gin.Engine) {
 	r.POST("/namespace",apis.CreateNamespace)
 	r.DELETE("/namespace",apis.DeleteNamespace)
 	r.GET("/deployments",apis.GetDeployment)
+	r.GET("/allDeployments",apis.GetAllDeployment)
 }
