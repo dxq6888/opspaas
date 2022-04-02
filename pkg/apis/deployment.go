@@ -29,3 +29,29 @@ func GetAllDeployment(c *gin.Context)  {
 	}
 	c.JSON(http.StatusOK,gin.H{"message":allDeployment})
 }
+
+func CreateDeployment(c *gin.Context) {
+	logger := tools.InitLogger()
+	deployment, err := service.CreateDeployment(c)
+	if err != nil {
+		logger.Info("create deployment failed,",zap.String("err",err.Error()))
+		c.JSON(http.StatusOK,gin.H{"message":err})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"message":deployment})
+}
+
+func DeleteDeployment(c *gin.Context) {
+	logger := tools.InitLogger()
+	err := service.DeleteDeployment(c)
+	if err != nil {
+		logger.Info("delete deployment failed,",zap.String("err",err.Error()))
+		c.JSON(http.StatusInternalServerError,gin.H{"msg":err})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"msg":"success"})
+}
+
+func UpdateDeployment()  {
+	
+}
