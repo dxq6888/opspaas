@@ -52,6 +52,13 @@ func DeleteDeployment(c *gin.Context) {
 	c.JSON(http.StatusOK,gin.H{"msg":"success"})
 }
 
-func UpdateDeployment()  {
-	
+func UpdateDeployment(c *gin.Context)  {
+	logger := tools.InitLogger()
+	deployment, err := service.UpdateDeployment(c)
+	if err != nil {
+		logger.Info("get deployment failed,",zap.String("err:",err.Error()))
+		c.JSON(http.StatusInternalServerError,gin.H{"msg":err})
+		return
+	}
+	c.JSON(http.StatusOK,gin.H{"msg":deployment.Spec.Template.Spec.Containers[0].Image})
 }

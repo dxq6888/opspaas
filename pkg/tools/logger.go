@@ -21,7 +21,7 @@ func getCurrentDirectory() string {
 	return dir
 }
 
-func GetLogConfig() (logPath ,logName string ,logDebug bool) {
+func getLogConfig() (logPath ,logName string ,logDebug bool) {
 	logPath = config.GetString(config.LogPath)		//log_path
 	if logPath == ""{
 		dir := getCurrentDirectory()
@@ -34,7 +34,7 @@ func GetLogConfig() (logPath ,logName string ,logDebug bool) {
 }
 
 func InitLogger() *zap.Logger {
-	logPath, logName, logDebug := GetLogConfig()
+	logPath, logName, logDebug := getLogConfig()
 	hook := lumberjack.Logger{
 		Filename:   logPath,
 		MaxSize:    128,
