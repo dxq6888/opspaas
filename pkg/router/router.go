@@ -14,4 +14,9 @@ func InitRouter(r *gin.Engine) {
 	r.POST("/createDeployment",apis.CreateDeployment)
 	r.DELETE("/deleteDeployment",apis.DeleteDeployment)
 	r.POST("/updateDeployment",apis.UpdateDeployment)
+	r.POST("/createService",apis.CreateService)
+	r.GET("/getNsService",apis.GetService)
+	r.POST("/updateService",apis.UpdateService)
+	r.GET("/getAllService",apis.GetAllService)
+	r.DELETE("/deleteService",apis.DeleteService)
 }

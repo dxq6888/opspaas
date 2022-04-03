@@ -55,7 +55,7 @@ func GetAllDeployment(c *gin.Context) (allDeploy []string, err error) {
 	return allDeploy, nil
 }
 
-func CreateDeployment(c *gin.Context) (dep *v12.Deployment,err error) {
+func CreateDeployment(c *gin.Context) (dep *v12.Deployment, err error) {
 	logger := tools.InitLogger()
 	clientSet, err := client.GetK8sClientset()
 	var deployment resource.Deployment
@@ -103,10 +103,10 @@ func CreateDeployment(c *gin.Context) (dep *v12.Deployment,err error) {
 	fmt.Println(deployment)
 	dep, err = clientSet.AppsV1().Deployments(deployment.NameSpace).Create(context.TODO(), deploy, v1.CreateOptions{})
 	if err != nil {
-		logger.Info("create deployment failed:",zap.String("err",err.Error()))
-		return nil,err
+		logger.Info("create deployment failed:", zap.String("err", err.Error()))
+		return nil, err
 	}
-	return dep,nil
+	return dep, nil
 }
 
 func DeleteDeployment(c *gin.Context) (err error) {
@@ -115,37 +115,37 @@ func DeleteDeployment(c *gin.Context) (err error) {
 	var deployment resource.Deployment
 	c.ShouldBindJSON(&deployment)
 	if err != nil {
-		logger.Info("get clientSet failed,",zap.String("err:",err.Error()))
+		logger.Info("get clientSet failed,", zap.String("err:", err.Error()))
 		return err
 	}
 	err = clientSet.AppsV1().Deployments(deployment.NameSpace).Delete(context.TODO(), deployment.Name, v1.DeleteOptions{})
 	if err != nil {
-		logger.Info("delete deployment failed,",zap.String("err:",err.Error()))
+		logger.Info("delete deployment failed,", zap.String("err:", err.Error()))
 		return err
 	}
 	return nil
 }
 
-func UpdateDeployment(c *gin.Context) (newDp *v12.Deployment,err error) {
+func UpdateDeployment(c *gin.Context) (newDp *v12.Deployment, err error) {
 	logger := tools.InitLogger()
 	var deployment resource.Deployment
 	c.ShouldBindJSON(&deployment)
 	clientSet, err := client.GetK8sClientset()
 	if err != nil {
-		logger.Info("get clientSet failed,",zap.String("err",err.Error()))
-		return nil,err
+		logger.Info("get clientSet failed,", zap.String("err", err.Error()))
+		return nil, err
 	}
 	dp, err := clientSet.AppsV1().Deployments(deployment.NameSpace).Get(context.TODO(), deployment.Name, v1.GetOptions{})
 	if err != nil {
-		logger.Info("get deployment failed,",zap.String("err",err.Error()))
-		return nil,err
+		logger.Info("get deployment failed,", zap.String("err", err.Error()))
+		return nil, err
 	}
 	dp.Spec.Template.Spec.Containers[0].Image = deployment.Image
 	dp.Annotations = deployment.Annotations
 	newDp, err = clientSet.AppsV1().Deployments(dp.Namespace).Update(context.TODO(), dp, v1.UpdateOptions{})
 	if err != nil {
-		logger.Info("update deployment failed,",zap.String("err",err.Error()))
-		return
+		logger.Info("update deployment failed,", zap.String("err", err.Error()))
+		return nil, err
 	}
-	return newDp,nil
+	return newDp, nil
 }
