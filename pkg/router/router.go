@@ -19,4 +19,7 @@ func InitRouter(r *gin.Engine) {
 	r.POST("/updateService",apis.UpdateService)
 	r.GET("/getAllService",apis.GetAllService)
 	r.DELETE("/deleteService",apis.DeleteService)
+	r.POST("/createIngress",apis.CreateIngress)
+	r.GET("/getIngress",apis.GetIngress)
+	r.GET("/getAllIngress",apis.GetAllIngress)
 }
