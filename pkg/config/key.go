@@ -9,6 +9,11 @@ const (
 	LogPath    KeyName = "log_path"
 	LogName    KeyName = "log_name"
 	LogDebug   KeyName = "log_debug"
+	MyHost     KeyName = "my_host"
+	MyUser     KeyName = "my_user"
+	MyPasswd   KeyName = "my_passwd"
+	MyPort     KeyName = "my_port"
+	MyDb       KeyName = "my_db"
 )
 
 type Namespaces struct {

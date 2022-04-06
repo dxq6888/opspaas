@@ -13,6 +13,7 @@ var keyMap map[KeyName]string
 type Config struct {
 	Server Server
 	Logger Logger
+	Mysql  Mysql
 }
 
 type Server struct {
@@ -27,6 +28,14 @@ type Logger struct {
 	LogDebug string `yaml:"debug"`
 }
 
+type Mysql struct {
+	MyHost   string `yaml:"host"`
+	MyUser   string `yaml:"user"`
+	MyPasswd string `yaml:"passwd"`
+	MyDb     string `yaml:"db"`
+	MyPort   string `yaml:"port"`
+}
+
 func init() {
 	var config Config
 	yamlFile, err := ioutil.ReadFile("./conf/config.yaml")
@@ -34,7 +43,6 @@ func init() {
 		klog.Fatal(err)
 		return
 	}
-	//err = yaml.Unmarshal(yamlFile, &config)
 	err = yaml2.Unmarshal(yamlFile, &config)
 	if err != nil {
 		klog.Fatal(err)
@@ -47,7 +55,12 @@ func init() {
 	keyMap[LogPath] = config.Logger.LogPath
 	keyMap[LogName] = config.Logger.LogName
 	keyMap[LogDebug] = config.Logger.LogDebug
-	//fmt.Println("config init-------->",keyMap)
+	keyMap[MyHost] = config.Mysql.MyHost
+	keyMap[MyUser] = config.Mysql.MyUser
+	keyMap[MyPasswd] = config.Mysql.MyPasswd
+	keyMap[MyDb] = config.Mysql.MyDb
+	keyMap[MyPort] = config.Mysql.MyPort
+	fmt.Println("config init-------->", keyMap)
 }
 
 func GetString(KeyName KeyName) string {
@@ -55,13 +68,12 @@ func GetString(KeyName KeyName) string {
 	return keyMap[KeyName]
 }
 
-
 func GetInt(keyName KeyName) int {
 	intStr := keyMap[keyName]
 	if intStr == "" {
 		//logger := tools.InitLogger()
 		//logger.Info("GetInt not read config ===>",zapcore.Field{Interface: keyName})
-		fmt.Println("GetInt not read config ===>",keyName)
+		fmt.Println("GetInt not read config ===>", keyName)
 		return -1
 	}
 	v, err := strconv.Atoi(intStr)
@@ -71,5 +83,3 @@ func GetInt(keyName KeyName) int {
 	}
 	return v
 }
-
-
